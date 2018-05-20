@@ -1,0 +1,35 @@
+.root {
+	-fx-background-color: #383838;
+}
+
+.check-box {
+    -fx-text-fill: #ffffff;
+}
+
+.label {
+	-fx-text-fill: #ffffff;
+}
+
+.menu {
+	-fx-background-color: #000000;
+}
+
+.menu-bar  {
+	-fx-background-color: #000000;
+}
+
+.menu-item {
+     -fx-background-color: #384638;
+}
+
+.menu-item:hover {
+     -fx-background-color: #503050;
+}
+
+.menu-bar .menu-button:hover {
+    -fx-background-color: #503050;
+}
+
+.context-menu {
+    -fx-background-color: #000000;
+}
