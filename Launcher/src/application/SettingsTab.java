@@ -24,7 +24,9 @@ public class SettingsTab {
 	public SettingsTab() {
 		stage = new Stage();
 		layout = new BorderPane();
+
 		generateLayout();
+
 		scene = new Scene(layout, 300, 400);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
@@ -52,17 +54,23 @@ public class SettingsTab {
 		hBoxLayout.setPadding(new Insets(10, 10, 10, 10));
 		hBoxLayout.setSpacing(20);
 
+		Label widthLabel = new Label("Width");
 		TextField widthField = new TextField("" + GameSettings.width);
 		widthField.setMaxWidth(50);
 		if (GameSettings.fullScreen)
 			widthField.setDisable(true);
-		Label widthLabel = new Label("Width");
+		widthField.setOnKeyPressed(e -> {
+			saved = false;
+		});
 
+		Label heightLabel = new Label("Height");
 		TextField heightField = new TextField("" + GameSettings.height);
 		heightField.setMaxWidth(50);
 		if (GameSettings.fullScreen)
 			heightField.setDisable(true);
-		Label heightLabel = new Label("Height");
+		heightField.setOnKeyPressed(e -> {
+			saved = false;
+		});
 
 		CheckBox fullScreen = new CheckBox("FullScreen");
 		fullScreen.setSelected(GameSettings.fullScreen);
@@ -135,8 +143,8 @@ public class SettingsTab {
 			}
 		});
 
-		Button cancel = new Button("Cancel");
-		cancel.setOnAction(e -> {
+		Button close = new Button("Close");
+		close.setOnAction(e -> {
 			if (!saved)
 				System.out.println("Change of settings canceled");
 			System.out.println("Settings closed");
@@ -150,7 +158,7 @@ public class SettingsTab {
 		GridPane.setConstraints(heightLabel, 1, 2);
 		gridLayout.getChildren().addAll(fullScreen, widthField, widthLabel, heightField, heightLabel);
 
-		hBoxLayout.getChildren().addAll(apply, applyAndClose, cancel);
+		hBoxLayout.getChildren().addAll(apply, close, applyAndClose);
 
 		// Image background = new Image("textures/giratina.png");
 		// ImageView img = new ImageView(background);
@@ -160,7 +168,7 @@ public class SettingsTab {
 		layout.setBottom(hBoxLayout);
 	}
 
-	enum ErrorType {
+	private enum ErrorType {
 		NULL, WIDTH, HEIGHT;
 	}
 

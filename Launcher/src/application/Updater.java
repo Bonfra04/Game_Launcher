@@ -11,15 +11,25 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import toolBox.FileDownloader;
+import toolBox.FileHandler;
 
 public class Updater {
 
+	private static final String DOWNLOAD_UPDATE_URL = "https://raw.githubusercontent.com/Bonfra04/Game_Launcher/master/versions/versions.txt";
+
 	private static Button finishButton;
 	private static Button cancelButton;
-	private static Label text;
+	private static Label updatindText;
 
 	public static boolean hasFoundUpdate() {
-		return true;
+		FileDownloader.download(DOWNLOAD_UPDATE_URL, "data/update.txt");
+
+		String gettedVersions = FileHandler.readTextFile("data/update.txt");
+
+		String havedVersions = FileHandler.readTextFile("data/versions.txt");
+
+		return !gettedVersions.equals(havedVersions);
 	}
 
 	public static void installUpdates() {
@@ -57,9 +67,9 @@ public class Updater {
 		top.setAlignment(Pos.TOP_CENTER);
 		top.setPadding(new Insets(15, 15, 15, 15));
 
-		text = new Label("Updating game files...");
+		updatindText = new Label("Updating game files...");
 
-		top.getChildren().addAll(text);
+		top.getChildren().addAll(updatindText);
 
 		layout.setTop(top);
 		layout.setCenter(center);
@@ -75,6 +85,14 @@ public class Updater {
 
 		stage.show();
 
+		update.setOnSucceeded(e -> {
+			cancelButton.setDisable(true);
+			finishButton.setDisable(false);
+
+			updatindText.setText("Game updated");
+		});
+
+		update.reset();
 		update.start();
 	}
 
@@ -99,10 +117,6 @@ public class Updater {
 					}
 					System.out.println("Update progress: " + progress);
 
-					if (progress == totalProcess) {
-						cancelButton.setDisable(true);
-						finishButton.setDisable(false);
-					}
 					return progress;
 				}
 			};
