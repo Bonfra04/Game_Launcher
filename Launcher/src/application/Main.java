@@ -2,6 +2,7 @@ package application;
 
 import java.io.IOException;
 
+import data.GameData;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -14,7 +15,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -34,6 +34,7 @@ public class Main extends Application {
 	private static ListView<String> versionList;
 
 	public static void main(String[] args) {
+		GameData.initializeData();
 		launch(args);
 	}
 
@@ -70,16 +71,31 @@ public class Main extends Application {
 		rightLayout.setPadding(new Insets(15, 3, 0, 15));
 		rightLayout.setAlignment(Pos.CENTER);
 
-		Menu file = new Menu("_File");
-		MenuItem settings = new MenuItem("Settings...");
-		settings.setOnAction(e -> {
-			new SettingsTab();
-			System.out.println("Settings opened");
-		});
-		file.getItems().add(settings);
-		file.getItems().add(new SeparatorMenuItem());
+		Menu launchOption = new Menu("_Launching Options");
 
-		menuBar.getMenus().addAll(file);
+		MenuItem dummyItem = new MenuItem();
+		launchOption.getItems().add(dummyItem);
+		launchOption.setOnShown(e -> {
+			launchOption.getItems().remove(0);
+			launchOption.getItems().add(dummyItem);
+
+			new LaunchingOptions();
+			System.out.println("Launching Options opened");
+		});
+		
+		Menu gameSettings = new Menu("_Game Settings");
+
+		MenuItem dummyItem2 = new MenuItem();
+		gameSettings.getItems().add(dummyItem2);
+		gameSettings.setOnShown(e -> {
+			gameSettings.getItems().remove(0);
+			gameSettings.getItems().add(dummyItem2);
+
+			new GameSetting();
+			System.out.println("Game Settings opened");
+		});
+
+		menuBar.getMenus().addAll(launchOption, gameSettings);
 
 		Button buttonPlay = new Button();
 		buttonPlay.setText("Play");
@@ -95,6 +111,7 @@ public class Main extends Application {
 		versionList.getItems().addAll(FileHandler.readTextFile("data/versions.txt").split("\n"));
 		versionList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		versionList.setMaxWidth(110);
+		versionList.setPrefHeight(300);
 		versionList.getSelectionModel().select(0);
 
 		Label versionText = new Label("Versions");
@@ -109,10 +126,10 @@ public class Main extends Application {
 		gameNameLabel.setScaleX(4);
 		gameNameLabel.setPadding(new Insets(5, 0, 0, 40));
 
-		Image screen1Image = new Image("textures/screen1.png");
-		ImageView screen1View = new ImageView(screen1Image);
+		Image screenImage = new Image("textures/screen.png");
+		ImageView screenView = new ImageView(screenImage);
 
-		centerLayout.getChildren().addAll(gameNameLabel, screen1View);
+		centerLayout.getChildren().addAll(gameNameLabel, screenView);
 
 		layout.setCenter(centerLayout);
 		layout.setTop(menuBar);
@@ -148,12 +165,12 @@ public class Main extends Application {
 		for (int i = 0; i < versionArray.length; i++)
 			finalVersion += i == versionArray.length - 1 ? "_" + versionArray[i] : versionArray[i];
 
-		System.out.println("Launching " + finalVersion + " with: " + GameSettings.fullScreen + " " + GameSettings.width
-				+ " " + GameSettings.height);
+		System.out.println("Launching " + finalVersion + " with: " + GameData.fullScreen + " " + GameData.width
+				+ " " + GameData.height);
 
 		try {
-			Runtime.getRuntime().exec("java -jar " + finalVersion + ".jar " + GameSettings.fullScreen + " "
-					+ GameSettings.width + " " + GameSettings.height);
+			Runtime.getRuntime().exec("java -jar " + finalVersion + ".jar " + GameData.fullScreen + " "
+					+ GameData.width + " " + GameData.height);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

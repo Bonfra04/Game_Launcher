@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import toolBox.FileDownloader;
 import toolBox.FileHandler;
+import toolBox.MessageBox;
 
 public class Updater {
 
@@ -23,13 +24,19 @@ public class Updater {
 	private static Label updatindText;
 
 	public static boolean hasFoundUpdate() {
-		FileDownloader.download(DOWNLOAD_UPDATE_URL, "data/update.txt");
+		if (FileDownloader.download(DOWNLOAD_UPDATE_URL, "data/update.txt")) {
 
-		String gettedVersions = FileHandler.readTextFile("data/update.txt");
+			String gettedVersions = FileHandler.readTextFile("data/update.txt");
 
-		String havedVersions = FileHandler.readTextFile("data/versions.txt");
+			String havedVersions = FileHandler.readTextFile("data/versions.txt");
 
-		return !gettedVersions.equals(havedVersions);
+			return !gettedVersions.equals(havedVersions);
+		} else {
+
+			MessageBox.newMessageBox("Error", "Error while downloading data. Try to use a different connection", "ok");
+
+			return false;
+		}
 	}
 
 	public static void installUpdates() {

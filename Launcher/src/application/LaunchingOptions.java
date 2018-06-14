@@ -1,5 +1,6 @@
 package application;
 
+import data.GameData;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,7 +14,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import toolBox.MessageBox;
 
-public class SettingsTab {
+public class LaunchingOptions {
 
 	private boolean saved = true;
 
@@ -21,7 +22,7 @@ public class SettingsTab {
 	private BorderPane layout;
 	private Scene scene;
 
-	public SettingsTab() {
+	public LaunchingOptions() {
 		stage = new Stage();
 		layout = new BorderPane();
 
@@ -32,16 +33,16 @@ public class SettingsTab {
 
 		stage.setScene(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
-		stage.setTitle("Settings");
+		stage.setTitle("Launching Options");
 		stage.getIcons().add(Main.ICON);
 		stage.setResizable(false);
 		stage.show();
 
 		stage.setOnCloseRequest(e -> {
 			if (!saved)
-				System.out.println("Settings closed without saving");
+				System.out.println("Launching Options closed without saving");
 			else
-				System.out.println("Setting closed");
+				System.out.println("Launching Options closed");
 		});
 	}
 
@@ -55,34 +56,34 @@ public class SettingsTab {
 		hBoxLayout.setSpacing(20);
 
 		Label widthLabel = new Label("Width");
-		TextField widthField = new TextField("" + GameSettings.width);
+		TextField widthField = new TextField("" + GameData.width);
 		widthField.setMaxWidth(50);
-		if (GameSettings.fullScreen)
+		if (GameData.fullScreen)
 			widthField.setDisable(true);
 		widthField.setOnKeyPressed(e -> {
 			saved = false;
 		});
 
 		Label heightLabel = new Label("Height");
-		TextField heightField = new TextField("" + GameSettings.height);
+		TextField heightField = new TextField("" + GameData.height);
 		heightField.setMaxWidth(50);
-		if (GameSettings.fullScreen)
+		if (GameData.fullScreen)
 			heightField.setDisable(true);
 		heightField.setOnKeyPressed(e -> {
 			saved = false;
 		});
 
 		CheckBox fullScreen = new CheckBox("FullScreen");
-		fullScreen.setSelected(GameSettings.fullScreen);
+		fullScreen.setSelected(GameData.fullScreen);
 		fullScreen.setOnAction(e -> {
 			if (fullScreen.isSelected()) {
 				widthField.setDisable(true);
 				heightField.setDisable(true);
-				GameSettings.setFullScreen(true);
+				GameData.setFullScreen(true);
 			} else {
 				widthField.setDisable(false);
 				heightField.setDisable(false);
-				GameSettings.setFullScreen(false);
+				GameData.setFullScreen(false);
 			}
 			saved = false;
 		});
@@ -91,7 +92,7 @@ public class SettingsTab {
 		apply.setOnAction(e -> {
 			ErrorType error = ErrorType.NULL;
 			try {
-				GameSettings.setWidth(Integer.parseInt(widthField.getText()));
+				GameData.setWidth(Integer.parseInt(widthField.getText()));
 			} catch (Exception ex) {
 				System.err.println("\"" + widthField.getText() + "\" is not a number");
 				error = ErrorType.WIDTH;
@@ -99,7 +100,7 @@ public class SettingsTab {
 			}
 
 			try {
-				GameSettings.setHeight(Integer.parseInt(heightField.getText()));
+				GameData.setHeight(Integer.parseInt(heightField.getText()));
 			} catch (Exception ex) {
 				System.err.println("\"" + heightField.getText() + "\" is not a number");
 				error = ErrorType.HEIGHT;
@@ -107,9 +108,9 @@ public class SettingsTab {
 			}
 
 			if (error == ErrorType.NULL) {
-				GameSettings.applySettings();
+				GameData.applySettings();
 				if (!saved)
-					System.out.println("Settings applyed");
+					System.out.println("Launching Options applyed");
 				saved = true;
 			}
 		});
@@ -118,7 +119,7 @@ public class SettingsTab {
 		applyAndClose.setOnAction(e -> {
 			ErrorType error = ErrorType.NULL;
 			try {
-				GameSettings.setWidth(Integer.parseInt(widthField.getText()));
+				GameData.setWidth(Integer.parseInt(widthField.getText()));
 			} catch (Exception ex) {
 				System.err.println("\"" + widthField.getText() + "\" is not a number");
 				error = ErrorType.WIDTH;
@@ -126,7 +127,7 @@ public class SettingsTab {
 			}
 
 			try {
-				GameSettings.setHeight(Integer.parseInt(heightField.getText()));
+				GameData.setHeight(Integer.parseInt(heightField.getText()));
 			} catch (Exception ex) {
 				System.err.println("\"" + heightField.getText() + "\" is not a number");
 				error = ErrorType.HEIGHT;
@@ -134,11 +135,11 @@ public class SettingsTab {
 			}
 
 			if (error == ErrorType.NULL) {
-				GameSettings.applySettings();
+				GameData.applySettings();
 				if (!saved)
-					System.out.println("Settings applyed");
+					System.out.println("Launching Options applyed");
 				saved = true;
-				System.out.println("Settings closed");
+				System.out.println("Launching Options closed");
 				stage.close();
 			}
 		});
@@ -146,8 +147,8 @@ public class SettingsTab {
 		Button close = new Button("Close");
 		close.setOnAction(e -> {
 			if (!saved)
-				System.out.println("Change of settings canceled");
-			System.out.println("Settings closed");
+				System.out.println("Change of Launching Options canceled");
+			System.out.println("Launching Options closed");
 			stage.close();
 		});
 
@@ -159,10 +160,6 @@ public class SettingsTab {
 		gridLayout.getChildren().addAll(fullScreen, widthField, widthLabel, heightField, heightLabel);
 
 		hBoxLayout.getChildren().addAll(apply, close, applyAndClose);
-
-		// Image background = new Image("textures/giratina.png");
-		// ImageView img = new ImageView(background);
-		// layout.getChildren().add(img);
 
 		layout.setCenter(gridLayout);
 		layout.setBottom(hBoxLayout);

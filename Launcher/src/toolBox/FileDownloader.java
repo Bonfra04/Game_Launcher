@@ -6,7 +6,7 @@ import java.net.URL;
 
 public class FileDownloader {
 
-	public static void download(String link, String path) {
+	public static boolean download(String link, String path) {
 
 		BufferedInputStream in = null;
 		FileOutputStream fout = null;
@@ -20,6 +20,7 @@ public class FileDownloader {
 			}
 		} catch (Exception e) {
 			System.err.print("Error while downloading from " + link);
+			return false;
 		} finally {
 			try {
 				if (in != null)
@@ -30,6 +31,8 @@ public class FileDownloader {
 				System.err.print("Error while downloading from " + link);
 			}
 		}
+
+		return true;
 
 	}
 
