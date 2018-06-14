@@ -27,7 +27,7 @@ import toolBox.MessageBox;
 public class Main extends Application {
 
 	public static final String TITLE = "Game Launcher";
-	public static final Image ICON = new Image("icons/rayquaza.png");
+	public static final Image ICON = new Image("icons/lampPost.png");
 
 	private static Stage stage;
 
