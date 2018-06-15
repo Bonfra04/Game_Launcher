@@ -8,6 +8,8 @@ public class FileDownloader {
 
 	public static boolean download(String link, String path) {
 
+		System.out.println("Starting download from " + link + " to " + path);
+
 		BufferedInputStream in = null;
 		FileOutputStream fout = null;
 		try {
@@ -19,7 +21,7 @@ public class FileDownloader {
 				fout.write(data, 0, count);
 			}
 		} catch (Exception e) {
-			System.err.print("Error while downloading from " + link);
+			System.err.println("Error while downloading from " + link);
 			return false;
 		} finally {
 			try {
@@ -28,9 +30,12 @@ public class FileDownloader {
 				if (fout != null)
 					fout.close();
 			} catch (Exception e) {
-				System.err.print("Error while downloading from " + link);
+				System.err.println("Error while downloading from " + link);
+				return false;
 			}
 		}
+
+		System.out.println("File downloaded");
 
 		return true;
 

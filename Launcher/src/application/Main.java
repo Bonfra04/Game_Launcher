@@ -1,7 +1,5 @@
 package application;
 
-import java.io.IOException;
-
 import data.GameData;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -21,6 +19,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import toolBox.BatchHandler;
 import toolBox.FileHandler;
 import toolBox.MessageBox;
 
@@ -82,7 +81,7 @@ public class Main extends Application {
 			new LaunchingOptions();
 			System.out.println("Launching Options opened");
 		});
-		
+
 		Menu gameSettings = new Menu("_Game Settings");
 
 		MenuItem dummyItem2 = new MenuItem();
@@ -160,20 +159,13 @@ public class Main extends Application {
 		for (String version : versions)
 			selectedVersion = version;
 
-		String[] versionArray = selectedVersion.split(" ");
-		String finalVersion = "";
-		for (int i = 0; i < versionArray.length; i++)
-			finalVersion += i == versionArray.length - 1 ? "_" + versionArray[i] : versionArray[i];
+		String finalVersion = selectedVersion.replace(" ", "_");
 
-		System.out.println("Launching " + finalVersion + " with: " + GameData.fullScreen + " " + GameData.width
-				+ " " + GameData.height);
+		System.out.println("Launching " + finalVersion + ".jar with: " + GameData.fullScreen + " " + GameData.width
+				+ " " + GameData.height + " " + GameData.folder);
 
-		try {
-			Runtime.getRuntime().exec("java -jar " + finalVersion + ".jar " + GameData.fullScreen + " "
-					+ GameData.width + " " + GameData.height);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		BatchHandler.executeCommand("java -jar " + finalVersion + ".jar " + GameData.fullScreen + " " + GameData.width
+				+ " " + GameData.height + " " + GameData.folder);
 
 		try {
 			Thread.sleep(100);

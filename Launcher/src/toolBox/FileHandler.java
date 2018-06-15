@@ -25,7 +25,7 @@ public class FileHandler {
 		} catch (IOException e) {
 			System.err.println("Error while loading font settings (" + path + ")");
 		}
-
+		
 		return file;
 
 	}

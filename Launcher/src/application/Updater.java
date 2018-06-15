@@ -1,5 +1,8 @@
 package application;
 
+import java.io.File;
+import java.io.FileWriter;
+
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
@@ -17,7 +20,7 @@ import toolBox.MessageBox;
 
 public class Updater {
 
-	private static final String DOWNLOAD_UPDATE_URL = "https://raw.githubusercontent.com/Bonfra04/Game_Launcher/master/versions/versions.txt";
+	private static final String DOWNLOAD_UPDATE_URL = "https://raw.githubusercontent.com/Bonfra04/Cloud/master/versions/version.txt";
 
 	private static Button finishButton;
 	private static Button cancelButton;
@@ -96,7 +99,7 @@ public class Updater {
 			cancelButton.setDisable(true);
 			finishButton.setDisable(false);
 
-			updatindText.setText("Game updated");
+			updatindText.setText("Game updated. Restart the launcher to play it!");
 		});
 
 		update.reset();
@@ -107,22 +110,68 @@ public class Updater {
 		@Override
 		protected Task<Integer> createTask() {
 			return new Task<Integer>() {
+				@SuppressWarnings("resource")
 				@Override
 				protected Integer call() throws Exception {
 					int totalProcess = 100;
 					int progress = 0;
 					super.updateProgress(progress, totalProcess);
 
-					// func1();
-					// progress += 1;
-					// super.updateProgress(progress, totalProcess);
+					System.out.println("Update progress: " + progress + "%");
 
-					for (progress = 0; progress < totalProcess; progress++) {
-						super.updateProgress(progress, totalProcess);
-						Thread.sleep(10);
-						System.out.println("Update progress: " + progress);
+					String[] gettedVersion = FileHandler.readTextFile("data/update.txt").split("\n");
+					String[] havedVersion = FileHandler.readTextFile("data/versions.txt").split("\n");
+
+					String[] differencies = new String[gettedVersion.length - havedVersion.length];
+					int i = 0;
+					for (String g : gettedVersion) {
+						boolean found = false;
+						for (String h : havedVersion)
+							if (g.equals(h)) {
+								found = true;
+								break;
+							}
+						if (!found) {
+							differencies[i] = g;
+							i++;
+						}
 					}
-					System.out.println("Update progress: " + progress);
+
+					String getted = "";
+					for (String s : differencies)
+						getted += s + "\n";
+
+					String haved = "";
+					for (String s : havedVersion)
+						haved += s + "\n";
+
+					String missing = getted + haved;
+
+					FileWriter writer = new FileWriter(new File("data/versions.txt"));
+					writer.write(missing);
+					writer.flush();
+
+					progress += 10;
+					super.updateProgress(progress, totalProcess);
+					System.out.println("Update progress: " + progress + "%");
+
+					int addOnProgress = (totalProcess - progress) / differencies.length;
+					for (String s : differencies) {
+						if (!FileDownloader.download("https://raw.githubusercontent.com/Bonfra04/Cloud/master/game/"
+								+ s.replaceAll(" ", "_") + ".jar", "data/" + s.replaceAll(" ", "_") + ".jar")) {
+							System.err.println("Potentially bugs on " + s.replaceAll(" ", "_") + ".jar");
+						}
+
+						progress += addOnProgress;
+						super.updateProgress(progress, totalProcess);
+						System.out.println("Update progress: " + progress + "%");
+					}
+
+					if (progress < totalProcess) {
+						progress = totalProcess;
+						super.updateProgress(progress, totalProcess);
+						System.out.println("Update progress: " + progress + "%");
+					}
 
 					return progress;
 				}
