@@ -9,9 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,40 +18,31 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import toolBox.BatchHandler;
+import toolBox.ClickableMenue;
 import toolBox.FileHandler;
 import toolBox.MessageBox;
 
-public class Main extends Application {
+public class GameLauncher extends Application {
 
 	public static final String TITLE = "Game Launcher";
-	public static final Image ICON = new Image("icons/lampPost.png");
+	public static final Image ICON = new Image("icons/lampPost_top.png");
 
-	private static Stage stage;
+	public static final GameSettings GAME_SETTINGS = new GameSettings();
 
-	private static ListView<String> versionList;
-
-	public static void main(String[] args) {
-		GameData.initializeData();
-		launch(args);
-	}
+	private ListView<String> versionList;
 
 	@Override
 	public void start(Stage primaryStage) {
-		try {
-			Scene scene = loadScene();
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setScene(scene);
-			primaryStage.setTitle(TITLE);
-			primaryStage.getIcons().add(ICON);
-			primaryStage.setResizable(false);
-			primaryStage.show();
-			stage = primaryStage;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		Scene scene = loadScene();
+		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		primaryStage.setScene(scene);
+		primaryStage.setTitle(TITLE);
+		primaryStage.getIcons().add(ICON);
+		primaryStage.setResizable(false);
+		primaryStage.show();
 	}
 
-	private static Scene loadScene() {
+	private Scene loadScene() {
 		BorderPane layout = new BorderPane();
 		MenuBar menuBar = new MenuBar();
 		HBox bottomLayout = new HBox();
@@ -70,27 +59,15 @@ public class Main extends Application {
 		rightLayout.setPadding(new Insets(15, 3, 0, 15));
 		rightLayout.setAlignment(Pos.CENTER);
 
-		Menu launchOption = new Menu("_Launching Options");
-
-		MenuItem dummyItem = new MenuItem();
-		launchOption.getItems().add(dummyItem);
-		launchOption.setOnShown(e -> {
-			launchOption.getItems().remove(0);
-			launchOption.getItems().add(dummyItem);
-
+		ClickableMenue launchOption = new ClickableMenue("_Launching Options");
+		launchOption.setOnClick(e -> {
 			new LaunchingOptions();
 			System.out.println("Launching Options opened");
 		});
 
-		Menu gameSettings = new Menu("_Game Settings");
-
-		MenuItem dummyItem2 = new MenuItem();
-		gameSettings.getItems().add(dummyItem2);
-		gameSettings.setOnShown(e -> {
-			gameSettings.getItems().remove(0);
-			gameSettings.getItems().add(dummyItem2);
-
-			new GameSetting();
+		ClickableMenue gameSettings = new ClickableMenue("_Game Settings");
+		gameSettings.setOnClick(e -> {
+			GAME_SETTINGS.launch(null);
 			System.out.println("Game Settings opened");
 		});
 
@@ -135,10 +112,11 @@ public class Main extends Application {
 		layout.setBottom(bottomLayout);
 		layout.setRight(rightLayout);
 		Scene scene = new Scene(layout, 480, 480);
+
 		return scene;
 	}
 
-	private static void checkForUpdate() {
+	private void checkForUpdate() {
 
 		if (Updater.hasFoundUpdate()) {
 			String wants = MessageBox.newMessageBox("Updates found", "Update found! Do you want to install it?", "yes",
@@ -151,7 +129,7 @@ public class Main extends Application {
 			MessageBox.newMessageBox("Nothing found", "No update found. Try later", "ok");
 	}
 
-	private static void launchGame() {
+	private void launchGame() {
 		ObservableList<String> versions = versionList.getSelectionModel().getSelectedItems();
 
 		String selectedVersion = null;
@@ -164,14 +142,19 @@ public class Main extends Application {
 		System.out.println("Launching " + finalVersion + ".jar with: " + GameData.fullScreen + " " + GameData.width
 				+ " " + GameData.height + " " + GameData.folder);
 
-		BatchHandler.executeCommand("java -jar " + finalVersion + ".jar " + GameData.fullScreen + " " + GameData.width
-				+ " " + GameData.height + " " + GameData.folder);
+		BatchHandler.executeCommand("java -jar data/" + finalVersion + ".jar " + GameData.fullScreen + " "
+				+ GameData.width + " " + GameData.height + " " + GameData.folder);
 
 		try {
 			Thread.sleep(100);
-		} catch (InterruptedException e) {
+			super.stop();
+		} catch (Exception e) {
+			System.err.println("Error while closing launcher");
 		}
+	}
 
-		stage.close();
+	public static void main(String[] args) {
+		GameData.initializeData();
+		GameLauncher.launch(args);
 	}
 }

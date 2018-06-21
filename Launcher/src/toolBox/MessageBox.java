@@ -1,6 +1,6 @@
 package toolBox;
 
-import application.Main;
+import application.GameLauncher;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -48,7 +48,7 @@ public class MessageBox {
 		grid.setCenter(layout);
 
 		Scene scene = new Scene(grid);
-		scene.getStylesheets().add(Main.class.getResource("application.css").toExternalForm());
+		scene.getStylesheets().add(GameLauncher.class.getResource("application.css").toExternalForm());
 		stage.setScene(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setResizable(false);

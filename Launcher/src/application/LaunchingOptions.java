@@ -19,22 +19,18 @@ public class LaunchingOptions {
 	private boolean saved = true;
 
 	private Stage stage;
-	private BorderPane layout;
-	private Scene scene;
 
 	public LaunchingOptions() {
 		stage = new Stage();
-		layout = new BorderPane();
+		BorderPane layout = generateLayout();
 
-		generateLayout();
-
-		scene = new Scene(layout, 300, 400);
+		Scene scene = new Scene(layout, 300, 400);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 
 		stage.setScene(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle("Launching Options");
-		stage.getIcons().add(Main.ICON);
+		stage.getIcons().add(GameLauncher.ICON);
 		stage.setResizable(false);
 		stage.show();
 
@@ -46,7 +42,7 @@ public class LaunchingOptions {
 		});
 	}
 
-	private void generateLayout() {
+	private BorderPane generateLayout() {
 		GridPane gridLayout = new GridPane();
 		gridLayout.setPadding(new Insets(10, 10, 10, 10));
 		gridLayout.setHgap(-20);
@@ -79,11 +75,11 @@ public class LaunchingOptions {
 			if (fullScreen.isSelected()) {
 				widthField.setDisable(true);
 				heightField.setDisable(true);
-				GameData.setFullScreen(true);
+				GameData.fullScreen = true;
 			} else {
 				widthField.setDisable(false);
 				heightField.setDisable(false);
-				GameData.setFullScreen(false);
+				GameData.fullScreen = false;
 			}
 			saved = false;
 		});
@@ -92,7 +88,7 @@ public class LaunchingOptions {
 		apply.setOnAction(e -> {
 			ErrorType error = ErrorType.NULL;
 			try {
-				GameData.setWidth(Integer.parseInt(widthField.getText()));
+				GameData.width = Integer.parseInt(widthField.getText());
 			} catch (Exception ex) {
 				System.err.println("\"" + widthField.getText() + "\" is not a number");
 				error = ErrorType.WIDTH;
@@ -100,7 +96,7 @@ public class LaunchingOptions {
 			}
 
 			try {
-				GameData.setHeight(Integer.parseInt(heightField.getText()));
+				GameData.height = Integer.parseInt(heightField.getText());
 			} catch (Exception ex) {
 				System.err.println("\"" + heightField.getText() + "\" is not a number");
 				error = ErrorType.HEIGHT;
@@ -119,7 +115,7 @@ public class LaunchingOptions {
 		applyAndClose.setOnAction(e -> {
 			ErrorType error = ErrorType.NULL;
 			try {
-				GameData.setWidth(Integer.parseInt(widthField.getText()));
+				GameData.width = Integer.parseInt(widthField.getText());
 			} catch (Exception ex) {
 				System.err.println("\"" + widthField.getText() + "\" is not a number");
 				error = ErrorType.WIDTH;
@@ -127,7 +123,7 @@ public class LaunchingOptions {
 			}
 
 			try {
-				GameData.setHeight(Integer.parseInt(heightField.getText()));
+				GameData.height = Integer.parseInt(heightField.getText());
 			} catch (Exception ex) {
 				System.err.println("\"" + heightField.getText() + "\" is not a number");
 				error = ErrorType.HEIGHT;
@@ -161,8 +157,12 @@ public class LaunchingOptions {
 
 		hBoxLayout.getChildren().addAll(apply, close, applyAndClose);
 
+		BorderPane layout = new BorderPane();
+
 		layout.setCenter(gridLayout);
 		layout.setBottom(hBoxLayout);
+
+		return layout;
 	}
 
 	private enum ErrorType {
