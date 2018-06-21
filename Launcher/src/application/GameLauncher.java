@@ -28,6 +28,7 @@ public class GameLauncher extends Application {
 	public static final Image ICON = new Image("icons/lampPost_top.png");
 
 	public static final GameSettings GAME_SETTINGS = new GameSettings();
+	public static final LaunchingOptions LAUNCHING_OPTIONS = new LaunchingOptions();
 
 	private ListView<String> versionList;
 
@@ -61,13 +62,13 @@ public class GameLauncher extends Application {
 
 		ClickableMenue launchOption = new ClickableMenue("_Launching Options");
 		launchOption.setOnClick(e -> {
-			new LaunchingOptions();
+			LAUNCHING_OPTIONS.launch();
 			System.out.println("Launching Options opened");
 		});
 
 		ClickableMenue gameSettings = new ClickableMenue("_Game Settings");
 		gameSettings.setOnClick(e -> {
-			GAME_SETTINGS.launch(null);
+			GAME_SETTINGS.launch();
 			System.out.println("Game Settings opened");
 		});
 
