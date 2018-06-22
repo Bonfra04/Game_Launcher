@@ -1,4 +1,4 @@
-package toolBox;
+package toolBox.graphics;
 
 import application.GameLauncher;
 import javafx.scene.Scene;
@@ -6,7 +6,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public abstract class OverWindow {
+public abstract class OverWindow implements Window {
 
 	public final String TITLE;
 
@@ -45,8 +45,4 @@ public abstract class OverWindow {
 		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
-
-	protected abstract BorderPane generateLayout();
-
-	protected abstract void handleEvents();
 }

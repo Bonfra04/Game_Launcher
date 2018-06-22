@@ -9,8 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import toolBox.MessageBox;
-import toolBox.OverWindow;
+import toolBox.graphics.MessageBox;
+import toolBox.graphics.OverWindow;
 
 public class LaunchingOptions extends OverWindow {
 
@@ -27,7 +27,7 @@ public class LaunchingOptions extends OverWindow {
 	}
 
 	@Override
-	protected BorderPane generateLayout() {
+	public BorderPane generateLayout() {
 		this.fullScreen = new CheckBox("FullScreen");
 		this.fullScreen.setSelected(GameData.fullScreen);
 
@@ -71,7 +71,7 @@ public class LaunchingOptions extends OverWindow {
 	}
 
 	@Override
-	protected void handleEvents() {
+	public void handleEvents() {
 		this.widthField.setOnKeyPressed(e -> {
 			this.saved = false;
 		});

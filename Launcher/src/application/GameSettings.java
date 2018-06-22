@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import toolBox.OverWindow;
+import toolBox.graphics.OverWindow;
 
 public class GameSettings extends OverWindow {
 	
@@ -25,7 +25,7 @@ public class GameSettings extends OverWindow {
 	}
 	
 	@Override
-	protected BorderPane generateLayout() {
+	public BorderPane generateLayout() {
 		this.useDefaultFolder = new CheckBox("Use default folder");
 		this.useDefaultFolder.setSelected(GameData.useDefaultFolder);
 
@@ -57,7 +57,7 @@ public class GameSettings extends OverWindow {
 	}
 
 	@Override
-	protected void handleEvents() {
+	public void handleEvents() {
 		this.useDefaultFolder.setOnAction(e -> {
 			if (this.useDefaultFolder.isSelected()) {
 				this.path.setText(GameData.defaultFolder);

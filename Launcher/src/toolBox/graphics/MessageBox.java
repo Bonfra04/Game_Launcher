@@ -1,4 +1,4 @@
-package toolBox;
+package toolBox.graphics;
 
 import application.GameLauncher;
 import javafx.geometry.Insets;

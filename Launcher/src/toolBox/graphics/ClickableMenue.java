@@ -1,4 +1,4 @@
-package toolBox;
+package toolBox.graphics;
 
 import javafx.event.Event;
 import javafx.event.EventHandler;
